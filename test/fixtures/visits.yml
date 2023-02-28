@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  data: 2023-02-27 20:27:26
+  status: MyString
+  checkin_at: 2023-02-27 20:27:26
+  checkout_at: 2023-02-27 20:27:26
+  user: one
+
+two:
+  data: 2023-02-27 20:27:26
+  status: MyString
+  checkin_at: 2023-02-27 20:27:26
+  checkout_at: 2023-02-27 20:27:26
+  user: two
