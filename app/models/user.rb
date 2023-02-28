@@ -2,6 +2,9 @@ require 'cpf_cnpj'
 require 'GoodnessValidator'
 
 class User < ApplicationRecord
+
+    # testando mudança de branch 8888
+
     has_secure_password
 
     has_many :visits # associação com visitas
