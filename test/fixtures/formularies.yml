@@ -2,6 +2,8 @@
 
 one:
   name: MyString
+  visit: one
 
 two:
   name: MyString
+  visit: two

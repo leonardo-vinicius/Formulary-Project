@@ -10,11 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_28_160608) do
-  create_table "formularies", force: :cascade do |t|
-    t.string "name"
+ActiveRecord::Schema[7.0].define(version: 2023_02_28_171849) do
+  create_table "answers", force: :cascade do |t|
+    t.string "content"
+    t.string "answered_at"
+    t.string "question"
+    t.integer "formulary_id", null: false
+    t.integer "question_id", null: false
+    t.integer "visit_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["formulary_id"], name: "index_answers_on_formulary_id"
+    t.index ["question_id"], name: "index_answers_on_question_id"
+    t.index ["visit_id"], name: "index_answers_on_visit_id"
+  end
+
+  create_table "formularies", force: :cascade do |t|
+    t.string "name"
+    t.integer "visit_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["visit_id"], name: "index_formularies_on_visit_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -31,13 +47,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_28_160608) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["formulary_id"], name: "index_questions_on_formulary_id"
-  end
-
-  create_table "testandos", force: :cascade do |t|
-    t.datetime "data"
-    t.datetime "data_saida"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -60,6 +69,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_28_160608) do
     t.index ["user_id"], name: "index_visits_on_user_id"
   end
 
+  add_foreign_key "answers", "formularies"
+  add_foreign_key "answers", "questions"
+  add_foreign_key "answers", "visits"
+  add_foreign_key "formularies", "visits"
   add_foreign_key "questions", "formularies"
   add_foreign_key "visits", "users"
 end

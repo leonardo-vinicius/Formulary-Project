@@ -1,3 +1,5 @@
 class Question < ApplicationRecord
-  belongs_to :formulary, optional: true # checa esse opcional depois
+  belongs_to :formulary
+  has_one :answer
+
 end
