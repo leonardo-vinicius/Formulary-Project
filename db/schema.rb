@@ -10,11 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_28_171849) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_21_154438) do
   create_table "answers", force: :cascade do |t|
     t.string "content"
     t.string "answered_at"
-    t.string "question"
     t.integer "formulary_id", null: false
     t.integer "question_id", null: false
     t.integer "visit_id", null: false

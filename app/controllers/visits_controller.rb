@@ -4,10 +4,12 @@ class VisitsController < ApplicationController
   # GET /visits
   def index
     @visits = Visit.all
+    render json: @visits
   end
 
   # GET /visits/1
   def show
+    render json: @visit
   end
 
   # GET /visits/new
@@ -19,11 +21,32 @@ class VisitsController < ApplicationController
   def edit
   end
 
+  # função para validações
+  def validation_datas
+
+    if @visit.data < Time.now
+      return false
+    end
+
+    if @visit.checkin_at < Time.now and @visit.checkin_at < @visit.checkout
+      return false
+    end
+
+    if @visit.checkout_at <= @visit.checkin_at
+      return false
+    end
+
+    return true
+  end
+
   # POST /visits
   def create
     @visit = Visit.new(visit_params)
+  
+      validacao = true
+      validacao = validation_datas()
 
-    if @visit.save
+    if @visit.save and validacao
       redirect_to @visit, notice: "Visit was successfully created."
     else
       render :new, status: :unprocessable_entity
@@ -53,6 +76,6 @@ class VisitsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def visit_params
-      params.require(:visit).permit(:data, :status, :checkin_at, :checkout_at, :user_id)
+      params.permit(:data, :status, :checkin_at, :checkout_at, :user_id)
     end
 end

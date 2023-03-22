@@ -4,10 +4,12 @@ class FormulariesController < ApplicationController
   # GET /formularies
   def index
     @formularies = Formulary.all
+    render json: @formularies
   end
 
   # GET /formularies/1
   def show
+    render json: @formulary
   end
 
   # GET /formularies/new
@@ -53,6 +55,7 @@ class FormulariesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def formulary_params
-      params.require(:formulary).permit(:name, :visit_id)
+      #params.require(:formulary).permit(:name, :visit_id)
+      params.permit(:name, :visit_id)
     end
 end

@@ -3,7 +3,6 @@
 one:
   content: MyString
   answered_at: MyString
-  question: MyString
   formulary: one
   question: one
   visit: one
@@ -11,7 +10,6 @@ one:
 two:
   content: MyString
   answered_at: MyString
-  question: MyString
   formulary: two
   question: two
   visit: two

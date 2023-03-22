@@ -3,11 +3,14 @@ class QuestionsController < ApplicationController
 
   # GET /questions
   def index
+    #render "sdfsdafsdfs"
     @questions = Question.all
+    render json: @questions
   end
 
   # GET /questions/1
   def show
+    render json: @question
   end
 
   # GET /questions/new
@@ -23,7 +26,14 @@ class QuestionsController < ApplicationController
   def create
     @question = Question.new(question_params)
 
-    if @question.save
+    validacao = true
+    Question.all.each do |perguntas|
+        if perguntas.name == @question.name and perguntas.formulary_id == @question.formulary_id
+          validacao = false
+        end
+    end 
+
+    if @question.save and validacao
       redirect_to @question, notice: "Question was successfully created."
     else
       render :new, status: :unprocessable_entity
@@ -53,6 +63,6 @@ class QuestionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def question_params
-      params.require(:question).permit(:name, :tipo_pergunta, :formulary_id)
+      params.permit(:name, :tipo_pergunta, :formulary_id)
     end
 end

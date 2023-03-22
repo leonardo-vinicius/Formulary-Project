@@ -17,7 +17,6 @@ class AnswersTest < ApplicationSystemTestCase
     fill_in "Answered at", with: @answer.answered_at
     fill_in "Content", with: @answer.content
     fill_in "Formulary", with: @answer.formulary_id
-    fill_in "Question", with: @answer.question
     fill_in "Question", with: @answer.question_id
     fill_in "Visit", with: @answer.visit_id
     click_on "Create Answer"
@@ -33,7 +32,6 @@ class AnswersTest < ApplicationSystemTestCase
     fill_in "Answered at", with: @answer.answered_at
     fill_in "Content", with: @answer.content
     fill_in "Formulary", with: @answer.formulary_id
-    fill_in "Question", with: @answer.question
     fill_in "Question", with: @answer.question_id
     fill_in "Visit", with: @answer.visit_id
     click_on "Update Answer"

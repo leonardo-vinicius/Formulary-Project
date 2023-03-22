@@ -3,7 +3,7 @@ require 'GoodnessValidator'
 
 class User < ApplicationRecord
 
-    has_many :visits # associação com visitas
+    has_many :visits
 
     validates :password, length: {minimum:6, message: 'deve ter pelo menos 2 caracteres'},
         format: { with: /[0-9]/, on: :create}
@@ -22,5 +22,6 @@ class User < ApplicationRecord
     validates :cpf, uniqueness: true, presence: true
 
     validates_with GoodnessValidator
+    #validates_with CPF_Validator
 
 end

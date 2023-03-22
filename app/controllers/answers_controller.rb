@@ -4,10 +4,12 @@ class AnswersController < ApplicationController
   # GET /answers
   def index
     @answers = Answer.all
+    render json: @answers
   end
 
   # GET /answers/1
   def show
+    render json: @answer
   end
 
   # GET /answers/new
@@ -22,6 +24,9 @@ class AnswersController < ApplicationController
   # POST /answers
   def create
     @answer = Answer.new(answer_params)
+    @resp = Answer.joins(:visit).joins('INNER JOIN users ON users.id = visits.user_id').where(visits: { id: @answer.visit_id }).select('users.name')
+    x = @resp.last.name
+    @answer.answered_at = params[:answered_at] = x
 
     if @answer.save
       redirect_to @answer, notice: "Answer was successfully created."
@@ -53,6 +58,6 @@ class AnswersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def answer_params
-      params.require(:answer).permit(:content, :answered_at, :question, :formulary_id, :question_id, :visit_id)
+      params.permit(:content, :answered_at, :formulary_id, :question_id, :visit_id)
     end
 end
