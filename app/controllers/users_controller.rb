@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
-    before_action :set_user, only: %i[ show update destroy ]
+    before_action :authenticate_request, except: :create
+    #before_action :authorize_request, except: :create
+    #before_action :set_user, only: %i[ show update destroy ]
   
     # GET /users
     def index
@@ -10,7 +12,17 @@ class UsersController < ApplicationController
   
     # GET /users/1
     def show
-      render json: @user
+      if User.exists?(params[:id])
+        #@user = User.find(params[:id])
+        set_user
+        render json: @user
+      else
+        #render json: @user.errors, status: 404
+        render json: { error: 'User not found' }, status: :not_found
+        # handle the case where the user doesn't exist
+        # e.g. redirect to an error page or show a flash message
+      end
+      
     end
 
     # POST /users
@@ -18,7 +30,8 @@ class UsersController < ApplicationController
       @user = User.new(user_params)
   
       if @user.save
-        render json: @user, status: :created, location: @user
+        #rende/home/leo/form/app2/app/modelsr json: @user, status: :created, location: @user
+        render json: @user
       else
         render json: @user.errors, status: :unprocessable_entity
       end
@@ -26,17 +39,32 @@ class UsersController < ApplicationController
 
     # PATCH/PUT /users/1
     def update
-      if @user.update(user_params)
-        render json: @UsersController
+      if User.exists?(params[:id])
+
+        set_user
+        if @user.update(user_params)
+          #render json: @UsersController
+          render json: @user
+        else
+          render json: @user.errors, status: :unprocessable_entity
+        end
       else
-        render json: @user.errors, status: :unprocessable_entity
+        render json: { error: 'User not found' }, status: :not_found
       end
+
     end
   
     # DELETE /users/1
 
     def destroy
-      @user.destroy
+      if User.exists?(params[:id])
+        set_user
+        @user.destroy
+        render json: { message: 'User deleted successfully' }
+
+      else
+        render json: { error: 'User not found' }, status: :not_found
+      end
     end
   
     private
@@ -47,7 +75,7 @@ class UsersController < ApplicationController
       
       # Only allow a list of trusted parameters through.
       def user_params
-        params.require(:user).permit(:name, :email, :password, :password_confirmation, :cpf)
+        params.permit(:name, :email, :password, :password_confirmation, :cpf)
       end
       
 end

@@ -1,15 +1,33 @@
 class AnswersController < ApplicationController
-  before_action :set_answer, only: %i[ show edit update destroy ]
+  before_action :authenticate_request
+  #before_action :set_answer, only: %i[ show edit update destroy ]
 
   # GET /answers
   def index
     @answers = Answer.all
+
+    @answers.each do |resp|
+      visit = Visit.find(resp.visit_id)
+      usuario = User.find(visit.user_id).name
+      resp.answered_at = usuario
+    end 
+
     render json: @answers
   end
 
   # GET /answers/1
   def show
-    render json: @answer
+
+    if Answer.exists?(params[:id])
+      set_answer
+      visit = Visit.find(@answer.visit_id)
+      usuario = User.find(visit.user_id).name
+      @answer.answered_at = usuario
+      render json: @answer
+    else
+      render json: { error: 'User not found' }, status: :not_found
+    end
+    
   end
 
   # GET /answers/new
@@ -23,13 +41,11 @@ class AnswersController < ApplicationController
 
   # POST /answers
   def create
+
     @answer = Answer.new(answer_params)
-    @resp = Answer.joins(:visit).joins('INNER JOIN users ON users.id = visits.user_id').where(visits: { id: @answer.visit_id }).select('users.name')
-    x = @resp.last.name
-    @answer.answered_at = params[:answered_at] = x
 
     if @answer.save
-      redirect_to @answer, notice: "Answer was successfully created."
+      render json: @answer
     else
       render :new, status: :unprocessable_entity
     end
@@ -37,17 +53,28 @@ class AnswersController < ApplicationController
 
   # PATCH/PUT /answers/1
   def update
-    if @answer.update(answer_params)
-      redirect_to @answer, notice: "Answer was successfully updated."
+    if Answer.exists?(params[:id])
+      set_answer
+      if @answer.update(answer_params)
+        #redirect_to @answer, notice: "Answer was successfully updated."
+        render json: @answer
+      else
+        render :edit, status: :unprocessable_entity
+      end
     else
-      render :edit, status: :unprocessable_entity
+      render json: { error: 'User not found' }, status: :not_found
     end
   end
 
   # DELETE /answers/1
   def destroy
-    @answer.destroy
-    redirect_to answers_url, notice: "Answer was successfully destroyed."
+    if Answer.exists?(params[:id])
+      set_answer
+      @answer.destroy
+      render json: {message: "Answer was successfully destroyed."} 
+    else
+      render json: { error: 'User not found' }, status: :not_found
+    end
   end
 
   private
@@ -58,6 +85,6 @@ class AnswersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def answer_params
-      params.permit(:content, :answered_at, :formulary_id, :question_id, :visit_id)
+      params.permit(:content, :formulary_id, :question_id, :visit_id)
     end
 end

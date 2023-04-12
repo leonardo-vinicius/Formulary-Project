@@ -5,7 +5,8 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+* Ruby version 3.0.2
+* Rails version 7.0.4.2
 
 * System dependencies
 
@@ -21,4 +22,5 @@ Things you may want to cover:
 
 * Deployment instructions
 
-* ...
+* Projeto Ruby on Rails criação de formulário com o objetivo de simular o fluxo de um sistema de coleta em campo.
+

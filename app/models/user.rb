@@ -1,17 +1,15 @@
 require 'cpf_cnpj'
-require 'GoodnessValidator'
+require 'CPFValidator'
 
 class User < ApplicationRecord
-
     has_many :visits
-
-    validates :password, length: {minimum:6, message: 'deve ter pelo menos 2 caracteres'},
+    
+    validates_presence_of :password
+    
+    validates :password, length: {minimum:6, message: 'deve ter pelo menos 6 caracteres'},
         format: { with: /[0-9]/, on: :create}
 
     has_secure_password
-
-    validates_presence_of :name
-    validates_presence_of :email
 
     validates :name, presence: {message: 'não pode ser deixado em branco'},
         length: {minimum: 2, message: 'deve ter pelo menos 2 caracteres'}
@@ -21,7 +19,8 @@ class User < ApplicationRecord
 
     validates :cpf, uniqueness: true, presence: true
 
-    validates_with GoodnessValidator
-    #validates_with CPF_Validator
+    #validates_with GoodnessValidator
+    validates_with CPFValidator
 
 end
+

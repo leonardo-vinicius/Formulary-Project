@@ -1,16 +1,21 @@
 class QuestionsController < ApplicationController
-  before_action :set_question, only: %i[ show edit update destroy ]
+  #before_action :set_question, only: %i[ show edit update destroy ]
 
   # GET /questions
   def index
-    #render "sdfsdafsdfs"
+
     @questions = Question.all
     render json: @questions
   end
 
   # GET /questions/1
   def show
-    render json: @question
+    if Question.exists?(params[:id])
+      set_question
+      render json: @question
+    else
+      render json: { error: 'Question not found' }, status: :not_found
+    end
   end
 
   # GET /questions/new
@@ -34,7 +39,8 @@ class QuestionsController < ApplicationController
     end 
 
     if @question.save and validacao
-      redirect_to @question, notice: "Question was successfully created."
+      #redirect_to @question, notice: "Question was successfully created."
+      render json: @question
     else
       render :new, status: :unprocessable_entity
     end
@@ -42,17 +48,31 @@ class QuestionsController < ApplicationController
 
   # PATCH/PUT /questions/1
   def update
-    if @question.update(question_params)
-      redirect_to @question, notice: "Question was successfully updated."
+    if Question.exists?(params[:id])
+      set_question
+      if @question.update(question_params)
+        #redirect_to @question, notice: "Question was successfully updated."
+        render json: @question
+      else
+        render :edit, status: :unprocessable_entity
+      end
     else
-      render :edit, status: :unprocessable_entity
+      render json: { error: 'Question not found' }, status: :not_found
     end
   end
 
   # DELETE /questions/1
   def destroy
-    @question.destroy
-    redirect_to questions_url, notice: "Question was successfully destroyed."
+
+    if Question.exists?(params[:id])
+      set_question
+      @question.destroy
+      #redirect_to questions_url, notice: "Question was successfully destroyed."
+      render json: {message: 'Question was successfully destroyed.'}
+    else
+      render json: { error: 'Question not found' }, status: :not_found
+    end
+    
   end
 
   private
