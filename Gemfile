@@ -15,9 +15,6 @@ gem 'simple_command'
 # json web token - projeto
 gem 'jwt'
 
-# RSPEC - projeto
-gem "rspec"
-
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.4", ">= 7.0.4.2"
 
@@ -52,6 +49,15 @@ gem "bootsnap", require: false
 # gem "rack-cors"
 
 group :development, :test do
+
+  # banco de dados rails só para testes
+  gem 'byebug'
+  gem "rspec-rails"
+  gem 'factory_bot_rails'
+  gem 'database_cleaner-active_record'
+  gem 'rails-controller-testing'
+  gem 'httparty'
+
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
 end
