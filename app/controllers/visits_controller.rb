@@ -1,5 +1,5 @@
 class VisitsController < ApplicationController
-  #before_action :set_visit, only: %i[ show edit update destroy ]
+  before_action :authenticate_request
 
   # GET /visits
   def index
@@ -16,15 +16,6 @@ class VisitsController < ApplicationController
     else
       render json: { error: 'Visit not found' }, status: :not_found
     end
-  end
-
-  # GET /visits/new
-  def new
-    @visit = Visit.new
-  end
-
-  # GET /visits/1/edit
-  def edit
   end
 
   # função para validações
@@ -56,7 +47,6 @@ class VisitsController < ApplicationController
     validacao = validation_datas()
 
     if @visit.save and validacao
-      #redirect_to @visit, notice: "Visit was successfully created."
       render json: @visit
     else
       render json: @visit.errors, status: :unprocessable_entity
@@ -69,7 +59,6 @@ class VisitsController < ApplicationController
       set_visit
       
       if @visit.update(visit_params)
-        #redirect_to @visit, notice: "Visit was successfully updated."
         render json: @visit
       else
         render :edit, status: :unprocessable_entity
@@ -85,7 +74,6 @@ class VisitsController < ApplicationController
     if Visit.exists?(params[:id])
       set_visit
       @visit.destroy
-      #redirect_to visits_url, notice: "Visit was successfully destroyed."
       render json: {message: 'Visit was suessfully destroyed'}
     else
       render json: { error: 'Visit not found' }, status: :not_found

@@ -1,6 +1,5 @@
 class FormulariesController < ApplicationController
   before_action :authenticate_request
-  #before_action :set_formulary, only: %i[ show edit update destroy ]
 
   # GET /formularies
   def index
@@ -18,21 +17,11 @@ class FormulariesController < ApplicationController
     end
   end
 
-  # GET /formularies/new
-  def new
-    @formulary = Formulary.new
-  end
-
-  # GET /formularies/1/edit
-  def edit
-  end
-
   # POST /formularies
   def create
     @formulary = Formulary.new(formulary_params)
 
     if @formulary.save
-      #redirect_to @formulary, notice: "Formulary was successfully created."
       render json: @formulary
     else
       render :new, status: :unprocessable_entity
@@ -44,7 +33,6 @@ class FormulariesController < ApplicationController
     if Formulary.exists?(params[:id])
       set_formulary
       if @formulary.update(formulary_params)
-        #redirect_to @formulary, notice: "Formulary was successfully updated."
         render json: @formulary
       else
         render :edit, status: :unprocessable_entity
@@ -60,7 +48,6 @@ class FormulariesController < ApplicationController
       set_formulary
       @formulary.destroy
       render json: {message: 'Formulary was successfully destroyed.'}
-      #redirect_to formularies_url, notice: "Formulary was successfully destroyed."
     else
       render json: { error: 'Formulary not found' }, status: :not_found
     end
@@ -74,7 +61,6 @@ class FormulariesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def formulary_params
-      #params.require(:formulary).permit(:name, :visit_id)
       params.permit(:name, :visit_id)
     end
 end

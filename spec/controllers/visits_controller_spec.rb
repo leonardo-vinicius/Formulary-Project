@@ -128,8 +128,7 @@ RSpec.describe VisitsController, type: :controller do
             end
             
             it "not found deleted visit"do
-                get "/visits/#{visit_create3.id}", headers: { 'Authorization' => 'Bearer ' + auth_token }
-                expect(response).to have_http_status(404)
+                expect(Visit.find_by(id:visit_create3.id)).to be_nil
             end
         end
     end

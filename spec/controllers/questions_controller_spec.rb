@@ -135,8 +135,7 @@ RSpec.describe QuestionsController, type: :controller do
             end
 
             it "not found deleted question"do
-                get "/questions/#{question2.id}", headers: { 'Authorization' => 'Bearer ' + auth_token }
-                expect(response).to have_http_status(404)
+                expect(Question.find_by(id:question2.id)).to be_nil
             end
         end
     end

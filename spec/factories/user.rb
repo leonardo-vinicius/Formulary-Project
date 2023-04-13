@@ -3,8 +3,6 @@ FactoryBot.define do
         name { "Ramon"}
         email { "ramon@email.com"}
         password {"senha123"}
-        #password_digest { 'senha123'}
-        #password_confirmation {'senha123'}
         cpf { "64442017050" }
     end
 
