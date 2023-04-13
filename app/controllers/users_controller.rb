@@ -1,7 +1,5 @@
 class UsersController < ApplicationController
     before_action :authenticate_request, except: :create
-    #before_action :authorize_request, except: :create
-    #before_action :set_user, only: %i[ show update destroy ]
   
     # GET /users
     def index
@@ -13,14 +11,10 @@ class UsersController < ApplicationController
     # GET /users/1
     def show
       if User.exists?(params[:id])
-        #@user = User.find(params[:id])
         set_user
         render json: @user
       else
-        #render json: @user.errors, status: 404
         render json: { error: 'User not found' }, status: :not_found
-        # handle the case where the user doesn't exist
-        # e.g. redirect to an error page or show a flash message
       end
       
     end
@@ -30,7 +24,6 @@ class UsersController < ApplicationController
       @user = User.new(user_params)
   
       if @user.save
-        #rende/home/leo/form/app2/app/modelsr json: @user, status: :created, location: @user
         render json: @user
       else
         render json: @user.errors, status: :unprocessable_entity
@@ -43,7 +36,6 @@ class UsersController < ApplicationController
 
         set_user
         if @user.update(user_params)
-          #render json: @UsersController
           render json: @user
         else
           render json: @user.errors, status: :unprocessable_entity
@@ -55,7 +47,6 @@ class UsersController < ApplicationController
     end
   
     # DELETE /users/1
-
     def destroy
       if User.exists?(params[:id])
         set_user
@@ -68,12 +59,10 @@ class UsersController < ApplicationController
     end
   
     private
-      # Use callbacks to share common setup or constraints between actions.
       def set_user
         @user = User.find(params[:id])
       end
       
-      # Only allow a list of trusted parameters through.
       def user_params
         params.permit(:name, :email, :password, :password_confirmation, :cpf)
       end

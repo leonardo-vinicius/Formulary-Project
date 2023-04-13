@@ -1,6 +1,5 @@
 class AnswersController < ApplicationController
   before_action :authenticate_request
-  #before_action :set_answer, only: %i[ show edit update destroy ]
 
   # GET /answers
   def index
@@ -30,15 +29,6 @@ class AnswersController < ApplicationController
     
   end
 
-  # GET /answers/new
-  def new
-    @answer = Answer.new
-  end
-
-  # GET /answers/1/edit
-  def edit
-  end
-
   # POST /answers
   def create
 
@@ -56,7 +46,6 @@ class AnswersController < ApplicationController
     if Answer.exists?(params[:id])
       set_answer
       if @answer.update(answer_params)
-        #redirect_to @answer, notice: "Answer was successfully updated."
         render json: @answer
       else
         render :edit, status: :unprocessable_entity

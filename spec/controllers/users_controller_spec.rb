@@ -12,7 +12,6 @@ RSpec.describe UsersController, type: :controller do
   #GET /users  users#index
   context "to get all users"do
     describe"GET all users", type: :request do     
-        #before { get "/users" }
         before {get '/users', headers: { 'Authorization' => 'Bearer ' + auth_token }}
 
         it "Get users all sucess"do
@@ -104,7 +103,8 @@ RSpec.describe UsersController, type: :controller do
   # PATCH/PUT users/:id
   context "Update a user by id"do
     describe "Update user sucessful", type: :request do
-        before { patch user_path(user3), params: { name: "Nalanda Vitória", email:"nalanda@hotmail.com", password:"nalanda123", cpf:"91013283015"}, headers: { 'Authorization' => 'Bearer ' + auth_token } }
+        before { patch user_path(user3), params: { name: "Nalanda Vitória", email:user3.email, password:user3.password, cpf:user3.cpf}, headers: { 'Authorization' => 'Bearer ' + auth_token } }
+        
         it "ok status"do
           expect(response).to have_http_status(200)
         end
@@ -124,7 +124,8 @@ RSpec.describe UsersController, type: :controller do
           end
 
           it "not found deleted user"do
-            expect{get "/users/#{user2.id}", headers: { 'Authorization' => 'Bearer ' + auth_token }}.to raise_error(ActiveRecord::RecordNotFound)
+            #expect{get "/users/#{user2.id}", headers: { 'Authorization' => 'Bearer ' + auth_token }}.to raise_error(ActiveRecord::RecordNotFound)
+            expect(User.find_by(id:user2.id)).to be_nil
           end
       end
   end

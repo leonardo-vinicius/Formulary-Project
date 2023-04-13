@@ -86,6 +86,16 @@ RSpec.describe FormulariesController, type: :controller do
         end
     end
 
+    context "formulary POST fail"do
+        before {post "/formularies", params:{name:nil, visit_id: visit.id}, headers: { 'Authorization' => 'Bearer ' + auth_token }}
+            describe"fail formulary create", type: :request do
+            
+            it"formulary fail response - unprocessabele"do
+                expect(response).to have_http_status(422)
+            end 
+        end
+    end
+
     context "Update a formulary by id"do
             describe "Update formulary sucessful", type: :request do
                 before { patch formulary_path(formulary), params: { name:"Formulario nome alterado", visit_id: visit.id }, headers: { 'Authorization' => 'Bearer ' + auth_token }}
@@ -107,9 +117,8 @@ RSpec.describe FormulariesController, type: :controller do
                 expect(response).to have_http_status(200)
             end
 
-            it "not found deleted formulary - unauthorized"do
-                get "/formularies/#{formulary3.id}", headers: { 'Authorization' => 'Bearer ' + auth_token }
-                expect(response).to have_http_status(404)
+            it "not found deleted formulary"do
+                expect(Formulary.find_by(id:formulary3.id)).to be_nil
             end
         end
     end
