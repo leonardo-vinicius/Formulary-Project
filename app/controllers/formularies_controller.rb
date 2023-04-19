@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FormulariesController < ApplicationController
   before_action :authenticate_request
 
@@ -47,20 +49,19 @@ class FormulariesController < ApplicationController
     if Formulary.exists?(params[:id])
       set_formulary
       @formulary.destroy
-      render json: {message: 'Formulary was successfully destroyed.'}
+      render json: { message: 'Formulary was successfully destroyed.' }
     else
       render json: { error: 'Formulary not found' }, status: :not_found
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_formulary
-      @formulary = Formulary.find(params[:id])
-    end
+  
+  def set_formulary
+    @formulary = Formulary.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def formulary_params
-      params.permit(:name, :visit_id)
-    end
+  def formulary_params
+    params.permit(:name, :visit_id)
+  end
 end

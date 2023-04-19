@@ -4,132 +4,124 @@ require 'json'
 
 RSpec.describe VisitsController, type: :controller do
     
-    let!(:user){FactoryBot.create(:user)}
-    let!(:user2){FactoryBot.create(:user2)}
-    let!(:visit){FactoryBot.attributes_for(:visit)}
-    let!(:visit2){FactoryBot.attributes_for(:visit)}
-    let!(:visit_create){FactoryBot.create(:visit, user_id: user.id)}
-    let!(:visit_create2){FactoryBot.create(:visit2, user_id: user2.id)}
-    let!(:visit_create3){FactoryBot.create(:visit3, user_id: user2.id)}
-    
-    let!(:auth_token) { JsonWebToken.encode(user_id: user.id) }
+  let!(:visit){ FactoryBot.attributes_for(:visit) }
+  let!(:visit_list){ FactoryBot.create_list(:visit, 5) }
+  let(:info_json) { JSON.parse(response.body) }
+  let!(:auth_token) { JsonWebToken.encode(user_id: User.first.id) }
 
-    context "GET visit all sucess"do
-        describe "GET visits sucess by index", type: :request do
-            #byebug
-            before {get "/visits", headers: { 'Authorization' => 'Bearer ' + auth_token }}
-            
-            it "request sucess"do
-                expect(response).to have_http_status(200)
-            end
-        end
-    end
+  before do
+    headers = { 'Authorization' => "Bearer #{auth_token}" }
+    allow_any_instance_of(ActionDispatch::Request).to receive(:headers).and_return(headers)
+  end
 
-    context "GET visit by index sucess"do
-        describe "GET visits sucess by index", type: :request do
-            #byebug
-            before {get "/visits/#{visit_create.id}", headers: { 'Authorization' => 'Bearer ' + auth_token }}
-            
-            it "request sucess"do
-                expect(response).to have_http_status(200)
-            end
-
-            it "Get visits params key sucess"do
-                parsed_response = JSON.parse(response.body)
-                info_json = parsed_response
-                #byebug
-                expect(info_json.keys).to match_array(["id", "data", "status", "checkin_at", "checkout_at", "created_at", "updated_at", "user_id"])
-            end
+  context 'GET visit all sucess' do
+    describe 'GET visits sucess by index', type: :request do
+      before { get '/visits' }
+      
+      it 'request sucess' do
+        expect(response).to have_http_status(200)
+      end
   
-            it "Get user index sucess"do
-                parsed_response = JSON.parse(response.body)
-                info_json = parsed_response
-                expect(info_json["data"]).to eq("2024-03-16T13:06:45.868Z")
-            end
-
-            it "Is the really id"do
-                parsed_response = JSON.parse(response.body)
-                info_json = parsed_response
-                expect(info_json["id"]).to eq(visit_create.id)
-            end
-
-        end
+      it 'all visits are created' do
+        expect(Visit.all.size).to eq(5)
+      end
     end
+  end
+  
 
-    context "GET visit by index inexistent - fail"do
-        describe "GET visits fail by index", type: :request do
-            before {get "/users/#{59}", headers: { 'Authorization' => 'Bearer ' + auth_token }}
-            
-            it "Not found error index inexistent"do
-                expect(response).to have_http_status(404)
-            end
-
-        end
+  context 'GET visit by index sucess' do
+    describe 'GET visits sucess by index', type: :request do
+      before { get "/visits/#{visit_list[0].id}" }
+      
+      it 'request sucess' do
+        expect(response).to have_http_status(200)
+      end
+  
+      it 'Get visits params key sucess' do
+        expect(info_json.keys).to match_array(['id', 'data', 'status', 'checkin_at', 'checkout_at', 'created_at', 'updated_at', 'user_id'])
+      end
+  
+      it 'Get user index sucess' do
+        expect(info_json['data']).to_not be_nil 
+      end
+  
+      it 'Is the really id' do
+        expect(info_json['id']).to eq(visit_list[0].id)
+      end
     end
+  end
+  
 
-    context "POST visit sucess"do
-        describe "create visit sucess", type: :request do                        
-            before {post "/visits", params:{data:visit[:data], status: visit[:status], checkin_at:visit[:checkin_at], checkout_at:visit[:checkout_at], user_id: user[:id]}, headers: { 'Authorization' => 'Bearer ' + auth_token }}
-            
-            it "sucess when create a new visit"do
-                expect(response).to have_http_status(200)
-            end
-
-            it "sucess and was created a new id"do
-                visit = Visit.last
-                expect(Visit.find_by(id:visit[:id])).to_not be_nil
-            end
-
-            it "visits belongs to a user" do
-                visit_of_post = Visit.last
-                expect(visit_of_post.user).to eq(user)
-            end
-        end
+  context 'GET visit by index inexistent - fail' do
+    describe 'GET visits fail by index', type: :request do
+      before { get "/visits/#{99}" }
+  
+      it 'Not found error index inexistent' do
+        expect(response).to have_http_status(404)
+      end
     end
-
-    context "POST visit fail"do
-        describe "create visit fail", type: :request do                        
-            # create without any attribute
-            before {post "/visits", params:{data:visit2[:data], checkin_at:visit2[:checkin_at], checkout_at:visit2[:checkout_at], user_id: user[:id]}, headers: { 'Authorization' => 'Bearer ' + auth_token }}
-            
-            it "fail when create a new visit"do
-                # when it is without user_id or status return 422, when it is without data, checkin or checkout return 500
-                expect(response).to have_http_status(422) or have_http_status(500)
-            end
-
-            it "fail and wasnt created a new id"do
-                visit = Visit.first
-                expect(Visit.find_by(id:visit2[:id])).to be_nil
-            end
-        end
+  end
+  
+  context 'POST visit sucess' do
+    describe 'create visit sucess', type: :request do                        
+      before { post '/visits', params:{ data:visit[:data], status: visit[:status], checkin_at: visit[:checkin_at], checkout_at: visit[:checkout_at], user_id: User.first.id} }
+  
+      it 'sucess when create a new visit' do
+        expect(response).to have_http_status(200)
+      end
+  
+      it 'sucess and was created a new id' do
+        visit = Visit.last
+        expect(Visit.find_by(id:visit[:id])).to_not be_nil
+      end
+  
+      it 'it is a new visit' do
+        expect(Visit.all.size).to eq(6)
+      end
     end
+  end
+  
 
-    context "Update a visit by id"do
-        describe "Update visit sucessful", type: :request do
-            before { patch visit_path(visit_create2), params: {data:visit_create2[:data], status: "REALIZADO", checkin_at:visit_create2[:checkin_at], checkout_at:visit_create2[:checkout_at], user_id: user2[:id]}, headers: { 'Authorization' => 'Bearer ' + auth_token }}
-
-            it "ok status"do
-                #byebug
-                expect(response).to have_http_status(200)
-            end
-            it "update sucessful example by status"do
-                parsed_response = JSON.parse(response.body)
-                info_json = parsed_response
-                expect(info_json["status"]).to eq("REALIZADO")
-            end
-        end
+  context 'POST visit fail' do
+    describe 'create visit fail', type: :request do                        
+      before { post '/visits', params:{data:visit[:data], checkin_at: visit[:checkin_at], checkout_at: visit[:checkout_at], user_id: User.first.id} }
+          
+      it 'fail when create a new visit' do
+        expect(response).to have_http_status(422)
+      end
     end
-
-    context "Delete a visit by id"do
-        describe "Update visit sucessful", type: :request do
-            before { delete visit_path(visit_create3), headers: { 'Authorization' => 'Bearer ' + auth_token }}
-            it "ok status delete"do
-                expect(response).to have_http_status(200)
-            end
-            
-            it "not found deleted visit"do
-                expect(Visit.find_by(id:visit_create3.id)).to be_nil
-            end
-        end
+  end
+  
+  context 'Update a visit by id' do
+    describe 'Update visit sucessful', type: :request do
+      before { patch visit_path(visit_list[0]), params: {data: visit_list[0][:data], status: 'REALIZADO', checkin_at: visit_list[0][:checkin_at], checkout_at: visit_list[0][:checkout_at], user_id: User.first.id} }
+  
+      it 'ok status' do
+        expect(response).to have_http_status(200)
+      end
+  
+      it 'update sucessful example by status' do
+        expect(info_json['status']).to eq('REALIZADO')
+      end
     end
+  end
+  
+  context 'Delete a visit by id' do
+    describe 'Update visit sucessful', type: :request do
+      before { delete visit_path(visit_list[3]) }
+  
+      it 'ok status delete' do
+        expect(response).to have_http_status(200)
+      end
+          
+      it 'not found deleted visit' do
+        expect(Visit.find_by(id:visit_list[3].id)).to be_nil
+      end
+  
+      it 'one less visit' do
+        expect(Visit.all.size).to eq(4)
+      end
+    end
+  end
+  
 end
