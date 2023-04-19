@@ -84,4 +84,10 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  #alteracao url
+  heroku_app_name = ENV['HEROKU_APP_NAME']
+  if heroku_app_name.present?
+    heroku_url = "https://#{heroku_app_name}.herokuapp.com"
+  end
 end
