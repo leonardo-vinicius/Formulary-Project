@@ -1,6 +1,5 @@
 class Formulary < ApplicationRecord
-    has_many :questions
-    belongs_to :visit
-    # validates :[question_id].name, uniqueness: true
-
+  belongs_to :visit
+  has_many :questions
+  validates :name, uniqueness: true, presence: true
 end
