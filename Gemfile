@@ -3,6 +3,12 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.0.2"
 
+# para maior segurança nos tokens
+gem 'brakeman'
+
+# para geração de factories aleatorias
+gem 'faker'
+
 # para manipulação de imagens
 gem "paperclip", "~> 6.0.0"
 
@@ -57,6 +63,7 @@ group :development, :test do
   gem 'database_cleaner-active_record'
   gem 'rails-controller-testing'
   gem 'httparty'
+  gem 'rubocop', require: false
 
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]

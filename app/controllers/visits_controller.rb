@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class VisitsController < ApplicationController
   before_action :authenticate_request
 
@@ -20,19 +22,7 @@ class VisitsController < ApplicationController
 
   # função para validações
   def validation_datas
-
-    if @visit.data < Time.now
-      p "data"
-      return false
-    end
-
-    if @visit.checkin_at >= Time.now
-      p "checkin < agora"
-      return false
-    end
-
-    if  @visit.checkin_at >= @visit.checkout_at
-      p "checkin > checkout"
+    if (@visit.data < Time.now) || @visit.checkin_at >= Time.now || @visit.checkin_at >= @visit.checkout_at
       return false
     end
 
@@ -42,11 +32,9 @@ class VisitsController < ApplicationController
   # POST /visits
   def create
     @visit = Visit.new(visit_params)
-  
-    validacao = true
-    validacao = validation_datas()
+    validacao = validation_datas
 
-    if @visit.save and validacao
+    if @visit.save && validacao
       render json: @visit
     else
       render json: @visit.errors, status: :unprocessable_entity
@@ -57,7 +45,6 @@ class VisitsController < ApplicationController
   def update
     if Visit.exists?(params[:id])
       set_visit
-      
       if @visit.update(visit_params)
         render json: @visit
       else
@@ -70,25 +57,22 @@ class VisitsController < ApplicationController
 
   # DELETE /visits/1
   def destroy
-
     if Visit.exists?(params[:id])
       set_visit
       @visit.destroy
-      render json: {message: 'Visit was suessfully destroyed'}
+      render json: { message: 'Visit was suessfully destroyed' }
     else
       render json: { error: 'Visit not found' }, status: :not_found
     end
-
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_visit
-      @visit = Visit.find(params[:id])
-    end
+  
+  def set_visit
+    @visit = Visit.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def visit_params
-      params.permit(:data, :status, :checkin_at, :checkout_at, :user_id)
-    end
+  def visit_params
+    params.permit(:data, :status, :checkin_at, :checkout_at, :user_id)
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AnswersController < ApplicationController
   before_action :authenticate_request
 
@@ -9,7 +11,7 @@ class AnswersController < ApplicationController
       visit = Visit.find(resp.visit_id)
       usuario = User.find(visit.user_id).name
       resp.answered_at = usuario
-    end 
+    end
 
     render json: @answers
   end
@@ -31,7 +33,6 @@ class AnswersController < ApplicationController
 
   # POST /answers
   def create
-
     @answer = Answer.new(answer_params)
 
     if @answer.save
@@ -60,20 +61,19 @@ class AnswersController < ApplicationController
     if Answer.exists?(params[:id])
       set_answer
       @answer.destroy
-      render json: {message: "Answer was successfully destroyed."} 
+      render json: { message: 'Answer was successfully destroyed.' } 
     else
       render json: { error: 'User not found' }, status: :not_found
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_answer
-      @answer = Answer.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def answer_params
-      params.permit(:content, :formulary_id, :question_id, :visit_id)
-    end
+  def set_answer
+    @answer = Answer.find(params[:id])
+  end
+
+  def answer_params
+    params.permit(:content, :formulary_id, :question_id, :visit_id)
+  end
 end

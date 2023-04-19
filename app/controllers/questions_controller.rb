@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class QuestionsController < ApplicationController
   before_action :authenticate_request
 
@@ -21,15 +23,14 @@ class QuestionsController < ApplicationController
   # POST /questions
   def create
     @question = Question.new(question_params)
-
     validacao = true
     Question.all.each do |perguntas|
-        if perguntas.name == @question.name and perguntas.formulary_id == @question.formulary_id
-          validacao = false
-        end
-    end 
+      if perguntas.name == @question.name && perguntas.formulary_id == @question.formulary_id
+        validacao = false
+      end
+    end
 
-    if @question.save and validacao
+    if @question.save && validacao
       render json: @question
     else
       render :new, status: :unprocessable_entity
@@ -40,11 +41,11 @@ class QuestionsController < ApplicationController
   def update
     if Question.exists?(params[:id])
       set_question
-      if @question.update(question_params)
-        render json: @question
-      else
-        render :edit, status: :unprocessable_entity
-      end
+        if @question.update(question_params)
+          render json: @question
+        else
+          render :edit, status: :unprocessable_entity
+        end
     else
       render json: { error: 'Question not found' }, status: :not_found
     end
@@ -52,23 +53,22 @@ class QuestionsController < ApplicationController
 
   # DELETE /questions/1
   def destroy
-
     if Question.exists?(params[:id])
       set_question
       @question.destroy
-      render json: {message: 'Question was successfully destroyed.'}
+      render json: { message: 'Question was successfully destroyed.' }
     else
       render json: { error: 'Question not found' }, status: :not_found
     end
-    
   end
 
   private
-    def set_question
-      @question = Question.find(params[:id])
-    end
 
-    def question_params
-      params.permit(:name, :tipo_pergunta, :formulary_id)
-    end
+  def set_question
+    @question = Question.find(params[:id])
+  end
+
+  def question_params
+    params.permit(:name, :tipo_pergunta, :formulary_id)
+  end
 end
