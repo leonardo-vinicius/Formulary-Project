@@ -84,4 +84,20 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-end
+
+  # alteracoes banco de dados
+  # E - mail
+  config.action_mailer.default_url_options = { host: 'https://formularyapp.herokuapp.com/' }
+=begin config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.gmail.com',
+    port:                 587,
+    domain:               'ic.ufal.br',
+    user_name:            '<username>',
+    password:             '<password>',
+    authentication:       'plain',
+    enable_starttls_auto: true,
+    open_timeout:         5,
+    read_timeout:         5 }
+=end
+  end
