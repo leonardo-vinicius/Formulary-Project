@@ -38,8 +38,8 @@ module Application
         resource '*',
           headers: :any,
           expose: %w(access-token expiry token-type uid client),
-          methods: [:get, :post, :put, :patch, :delete, :options, :head],
-          expose: ['Authorization']
+          methods: [:get, :post, :put, :patch, :delete, :options, :head]
+          # expose: ['Authorization']
       end
     end
     # fim alteracoes autenticacao correta
