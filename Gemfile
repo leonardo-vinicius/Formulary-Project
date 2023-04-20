@@ -3,6 +3,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.0.2"
 
+# para resolver autenticacao
+gem 'rack-cors'
+
 # alteracoes banco de dados
 gem 'pg', '~> 1.2', '>= 1.2.3', group: :production
 # para maior segurança nos tokens
