@@ -22,5 +22,20 @@ module Application
     
     # alteracoes banco de dados
     config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+    # alteracoes autenticacao correta
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore
+    config.middleware.use Rack::Deflater
+    config.middleware.insert_before ActionDispatch::Static, Rack::Cors do
+      allow do
+        origins 'https://formularyapp.herokuapp.com'
+        resource '*',
+          headers: :any,
+          methods: [:get, :post, :put, :patch, :delete, :options, :head],
+          expose: ['Authorization']
+      end
+    end
+    # fim alteracoes autenticacao correta
   end
 end
