@@ -3,6 +3,16 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.0.2"
 
+# tentando resolver algo de gems 
+gem 'byebug'
+gem "rspec-rails"
+gem 'factory_bot_rails'
+gem 'database_cleaner-active_record'
+gem 'rails-controller-testing'
+gem 'httparty'
+gem 'rubocop', require: false
+# tentando resolver algo de gems
+
 # para resolver autenticacao
 gem 'rack-cors'
 
@@ -59,13 +69,7 @@ gem "bootsnap", require: false
 group :development, :test do
 
   # banco de dados rails só para testes
-  gem 'byebug'
-  gem "rspec-rails"
-  gem 'factory_bot_rails'
-  gem 'database_cleaner-active_record'
-  gem 'rails-controller-testing'
-  gem 'httparty'
-  gem 'rubocop', require: false
+  
 
   # alteracoes banco de dados
   # Use sqlite3 as the database for Active Record

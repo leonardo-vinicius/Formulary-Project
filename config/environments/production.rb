@@ -76,18 +76,20 @@ Rails.application.configure do
   # require "syslog/logger"
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
 
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
-    logger           = ActiveSupport::Logger.new(STDOUT)
-    logger.formatter = config.log_formatter
-    config.logger    = ActiveSupport::TaggedLogging.new(logger)
-  end
+  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
+
+if ENV["RAILS_LOG_TO_STDOUT"].present?
+  logger           = ActiveSupport::Logger.new(STDOUT)
+  logger.formatter = config.log_formatter
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
+end
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
   #alteracao url
-  heroku_app_name = ENV['HEROKU_APP_NAME']
-  if heroku_app_name.present?
-    heroku_url = "https://#{heroku_app_name}.herokuapp.com"
-  end
+  # heroku_app_name = ENV['HEROKU_APP_NAME']
+  # if heroku_app_name.present?
+  #  heroku_url = "https://#{heroku_app_name}.herokuapp.com"
+  # end
 end
