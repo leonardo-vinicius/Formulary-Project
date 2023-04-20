@@ -3,6 +3,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.0.2"
 
+# tentando resolver a autenticação
+gem 'dotenv-rails', groups: [:development, :test]
+
 # tentando resolver algo de gems 
 gem 'byebug'
 gem "rspec-rails"
