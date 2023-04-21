@@ -34,3 +34,20 @@ Versões utilizadas:
     Answer
     usados comandos validate
     caminho para testes: rspec ./spec/controllers/answers_controller_spec.rb
+
+<lu>
+    <h3>Fluxo Heroku:</h3>
+    
+    - ordem de criação - user, visit, formulary, question, answer
+    (por exemplo visit precisa de um user_id e assim por diante)
+
+    - Criar um Usuário: POST https://formularyapp.herokuapp.com/users
+    - Fazer o login:    POST https://formularyapp.herokuapp.com/authenticate
+
+    - após fazer o login colocar o auth_token gerado no header com a key: Authorization e value Bearer + auth_token
+
+    - Fazer as demais operações GET/POST/PATCH/DELETE https://formularyapp.herokuapp.com/<model>
+    Esse <model> pode ser: users, visits, formularies, questions, answers
+
+    - se necessario o id: https://formularyapp.herokuapp.com/<model>/id
+ </lu>
