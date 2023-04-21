@@ -9,11 +9,6 @@ class AuthenticateUser
   end
 
   def call
-    # JsonWebToken.encode(user_id: user.id) if user
-    # Authenticate::JsonWebToken.encode(sub: user.id) if user
-    p "SUBZERO E USER"
-    p user.id
-    p user
     Authenticate::JsonWebToken.encode(sub: user.id) if user
   end
 

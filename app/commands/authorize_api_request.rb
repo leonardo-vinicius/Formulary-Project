@@ -16,8 +16,6 @@ class AuthorizeApiRequest
   attr_reader :headers
 
   def user
-    puts "NOME ALEATORIO"
-    p decoded_auth_token
     @user ||= User.find(decoded_auth_token["sub"]) if decoded_auth_token
     @user || errors.add(:token, 'Invalid token') && nil
   end
